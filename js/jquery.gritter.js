@@ -5,8 +5,8 @@
  * Copyright (c) 2009 Jordan Boesch
  * Dual licensed under the MIT and GPL licenses.
  *
- * Date: June 26, 2009
- * Version: 1.0
+ * Date: October 20, 2009
+ * Version: 1.4
  */
 
 (function($){
@@ -18,22 +18,22 @@
 	var Gritter = {
 	    
 	    // PUBLIC - touch all you want
-	    fade_in_speed: 'medium', // how fast notifications fade in
+		fade_in_speed: 'medium', // how fast notifications fade in
 		fade_speed: 2000, // how fast the notices fade out
-	    timer_stay: 6000, // how long you want the message to hang on screen for
+		timer_stay: 6000, // how long you want the message to hang on screen for
 	    
 	    // PRIVATE - no touchy the private parts
 		_custom_timer: 0,
-	    _item_count: 0,
+		_item_count: 0,
 		_tpl_close: '<div class="gritter-close"></div>',
 		_tpl_item: '<div id="gritter-item-[[number]]" class="gritter-item-wrapper" style="display:none"><div class="gritter-top"></div><div class="gritter-item">[[image]]<div class="[[class_name]]"><span class="gritter-title">[[username]]</span><p>[[text]]</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div>',
-	    _tpl_wrap: '<div id="gritter-notice-wrapper"></div>',
+		_tpl_wrap: '<div id="gritter-notice-wrapper"></div>',
 	    
 	    // Add a notification to the screen
 	    add: function(params){
 	        
 	        // basics
-	        var user = params.title;
+			var user = params.title;
 			var text = params.text;
 			var image = params.image || '';
 			var sticky = params.sticky || false;
