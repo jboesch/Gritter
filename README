@@ -1,3 +1,8 @@
+Changes in 1.5 (October 21, 2009)
+======================
+* Renamed the global option parameters to make more sense
+* Made it so the global options are only being ran once instead of each $.gritter.add() call
+
 Changes in 1.4 (October 20, 2009)
 ======================
 * Added callbacks (before_open, before_close, after_open, after_close) to the gritter notifications

@@ -17,8 +17,8 @@
 	// Allow global option override
 	$.gritter.options = {
 		fade_in_speed: 'medium', // how fast notifications fade in
-		fade_speed: 2000, // how fast the notices fade out
-		timer_stay: 6000 // hang on the screen for...
+		fade_out_speed: 2000, // how fast the notices fade out
+		time: 6000 // hang on the screen for...
 	}
 	
 	// Add a gritter notification
@@ -32,9 +32,7 @@
 			alert('Gritter Error: ' + e);
 		}
 		
-		var id = Gritter.add(params);
-		
-		return id;
+		return Gritter.add(params);
 
 	}
 	
@@ -55,12 +53,13 @@
 	    
 	    // PUBLIC - options to over-ride with $.gritter.options in "add"
 		fade_in_speed: '',
-		fade_speed: '',
-		timer_stay: '',
+		fade_out_speed: '',
+		time: '',
 	    
 	    // PRIVATE - no touchy the private parts
 		_custom_timer: 0,
 		_item_count: 0,
+		_is_setup: 0,
 		_tpl_close: '<div class="gritter-close"></div>',
 		_tpl_item: '<div id="gritter-item-[[number]]" class="gritter-item-wrapper" style="display:none"><div class="gritter-top"></div><div class="gritter-item">[[image]]<div class="[[class_name]]"><span class="gritter-title">[[username]]</span><p>[[text]]</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div>',
 		_tpl_wrap: '<div id="gritter-notice-wrapper"></div>',
@@ -68,25 +67,24 @@
 	    // Add a notification to the screen
 	    add: function(params){
 	        
-	        // check the options and set
-	        for(opt in $.gritter.options){
-	        	this[opt] = $.gritter.options[opt];
+	        // check the options and set them once
+	        if(!this._is_setup){
+		        this.runSetup();
 	        }
 	        
 	        // basics
-			var user = params.title;
-			var text = params.text;
-			var image = params.image || '';
-			var sticky = params.sticky || false;
-			var time_alive = params.time || '';
+			var user = params.title, 
+				text = params.text,
+				image = params.image || '',
+				sticky = params.sticky || false,
+				time_alive = params.time || '';
 			
 			// This is also called from init, we just added it here because
 	        // some people might just call the "add" method
 	        this.verifyWrapper();
 	        
-	        var tmp = this._tpl_item;
 	        this._item_count++;
-			var number = this._item_count;
+			var number = this._item_count, tmp = this._tpl_item;
 			
 			// callbacks - each callback has a unique identifier so they don't get over-ridden
 			this['_before_open_' + number] = (typeof params.before_open == 'function') ? params.before_open : function(){};
@@ -102,8 +100,8 @@
 				this._custom_timer = time_alive;
 			}
 			
-			var image_str = (image != '') ? '<img src="' + image + '" class="gritter-image" />' : '';
-			var class_name = (image != '') ? 'gritter-with-image' : 'gritter-without-image';
+			var image_str = (image != '') ? '<img src="' + image + '" class="gritter-image" />' : '',
+				class_name = (image != '') ? 'gritter-with-image' : 'gritter-without-image';
 			
 	        tmp = this.str_replace(
 	            ['[[username]]', '[[text]]', '[[image]]', '[[number]]', '[[class_name]]'],
@@ -112,6 +110,7 @@
 	        
 	        this['_before_open_' + number]();
 	        $('#gritter-notice-wrapper').append(tmp);
+	        
 	        var item = $('#gritter-item-' + this._item_count);
 	        
 	        item.fadeIn(this.fade_in_speed, function(){
@@ -122,17 +121,19 @@
 				this.setFadeTimer(item, number);
 			}
 			
-			$(item).hover(function(){
-				if(!sticky){ 
-					Gritter.restoreItemIfFading(this, number);
+			$(item).bind('mouseenter mouseleave', function(event){
+				if(event.type == 'mouseenter'){
+					if(!sticky){ 
+						Gritter.restoreItemIfFading(this, number);
+					}
+					Gritter.hoveringItem(this);
 				}
-				Gritter.hoveringItem(this);
-			},
-			function(){
-				if(!sticky){
-					Gritter.setFadeTimer(this, number);
+				else {
+					if(!sticky){
+						Gritter.setFadeTimer(this, number);
+					}
+					Gritter.unhoveringItem(this);
 				}
-				Gritter.unhoveringItem(this);
 			});
 			
 			return number;
@@ -157,7 +158,7 @@
 			Gritter['_before_close_' + unique_id]($(e));
 	        $(e).animate({
 	            opacity:0
-	        }, Gritter.fade_speed, function(){
+	        }, Gritter.fade_out_speed, function(){
 	            $(e).animate({ height: 0 }, 300, function(){
 	                $(e).remove();
 	                Gritter.countRemoveWrapper(unique_id);
@@ -206,7 +207,7 @@
 			
 			if(typeof(params) === 'object'){
 				if(params.fade){
-					var speed = this.fade_speed;
+					var speed = this.fade_out_speed;
 					if(params.speed){
 						speed = params.speed;
 					}
@@ -231,19 +232,22 @@
 	        
 	    },
 	    
+	    // Set the global options
+	    runSetup: function(){
+	    
+	    	for(opt in $.gritter.options){
+	        	this[opt] = $.gritter.options[opt];
+	        }
+	        this._is_setup = 1;
+	        
+	    },
+	    
 	    // Set the notification to fade out after a certain amount of time
 	    setFadeTimer: function(item, number){
 			
-			var timer_str = (this._custom_timer) ? this._custom_timer : this.timer_stay;
+			var timer_str = (this._custom_timer) ? this._custom_timer : this.time;
 	        Gritter['_int_id_' + number] = window.setTimeout(function(){ Gritter.fade(item, number); }, timer_str);
 	
-	    },
-	    
-	    // If called, would allow users to globally override options
-	    setOptions: function(params){
-	    	
-	    	
-	    	
 	    },
 		
 		// Bring everything to a halt!    
