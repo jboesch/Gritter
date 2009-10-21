@@ -11,6 +11,15 @@
 	
 	$(document).ready(function(){
 		
+		// global setting override
+		/*
+		$.extend($.gritter.options, { 
+			fade_in_speed: 'medium', // how fast notifications fade in (string or int)
+			fade_speed: 2000, // how fast the notices fade out
+			timer_stay: 6000 // hang on the screen for...
+		});
+		*/
+		
 		$('#add-sticky').click(function(){
 		
 			// You can have it return a unique id, this can be used to manually remove it later using

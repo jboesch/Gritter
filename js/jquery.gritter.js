@@ -11,16 +11,52 @@
 
 (function($){
  	
- 	/********************************************
-	 * First, we'll define our object
-	 */
- 	
-	var Gritter = {
-	    
-	    // PUBLIC - touch all you want
+ 	// Set it up as an object
+	$.gritter = {};
+	
+	// Allow global option override
+	$.gritter.options = {
 		fade_in_speed: 'medium', // how fast notifications fade in
 		fade_speed: 2000, // how fast the notices fade out
-		timer_stay: 6000, // how long you want the message to hang on screen for
+		timer_stay: 6000 // hang on the screen for...
+	}
+	
+	// Add a gritter notification
+	$.gritter.add = function(params){
+		
+		try {
+			if(!params.title || !params.text){
+				throw 'You need to fill out the first 2 params: "title" and "text"'; 
+			}
+		} catch(e) {
+			alert('Gritter Error: ' + e);
+		}
+		
+		var id = Gritter.add(params);
+		
+		return id;
+
+	}
+	
+	// Remove a specific notification
+	$.gritter.remove = function(id, params){
+		Gritter.removeSpecific(id, params || '');
+	}
+	
+	// Remove all gritter notifications
+	$.gritter.removeAll = function(params){
+		Gritter.stop(params || '');
+	}
+ 	
+ 	/****************************************
+	 * Our main Gritter object
+	 */
+	var Gritter = {
+	    
+	    // PUBLIC - options to over-ride with $.gritter.options in "add"
+		fade_in_speed: '',
+		fade_speed: '',
+		timer_stay: '',
 	    
 	    // PRIVATE - no touchy the private parts
 		_custom_timer: 0,
@@ -31,6 +67,11 @@
 	    
 	    // Add a notification to the screen
 	    add: function(params){
+	        
+	        // check the options and set
+	        for(opt in $.gritter.options){
+	        	this[opt] = $.gritter.options[opt];
+	        }
 	        
 	        // basics
 			var user = params.title;
@@ -197,6 +238,13 @@
 	        Gritter['_int_id_' + number] = window.setTimeout(function(){ Gritter.fade(item, number); }, timer_str);
 	
 	    },
+	    
+	    // If called, would allow users to globally override options
+	    setOptions: function(params){
+	    	
+	    	
+	    	
+	    },
 		
 		// Bring everything to a halt!    
 		stop: function(params){
@@ -262,38 +310,6 @@
 	    
 	}
 	
-	/********************************************
-	 * Now lets turn it into some jQuery Magic!
-	 */
 	
-	// Set it up as an object
-	$.gritter = {};
-	
-	// Add a gritter notification
-	$.gritter.add = function(params){
-
-		try {
-			if(!params.title || !params.text){
-				throw 'You need to fill out the first 2 params: "title" and "text"'; 
-			}
-		} catch(e) {
-			alert('Gritter Error: ' + e);
-		}
-		
-		var id = Gritter.add(params);
-		
-		return id;
-
-	}
-	
-	// Remove a specific notification
-	$.gritter.remove = function(id, params){
-		Gritter.removeSpecific(id, params || '');
-	}
-	
-	// Remove all gritter notifications
-	$.gritter.removeAll = function(params){
-		Gritter.stop(params || '');
-	}
 	
 })(jQuery);
