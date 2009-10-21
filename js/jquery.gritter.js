@@ -6,7 +6,7 @@
  * Dual licensed under the MIT and GPL licenses.
  *
  * Date: October 20, 2009
- * Version: 1.4
+ * Version: 1.5
  */
 
 (function($){
