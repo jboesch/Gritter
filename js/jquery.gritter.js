@@ -21,7 +21,7 @@
 	*/
 	$.gritter.options = {
 		fade_in_speed: 'medium', // how fast notifications fade in
-		fade_out_speed: 2000, // how fast the notices fade out
+		fade_out_speed: 1000, // how fast the notices fade out
 		time: 6000 // hang on the screen for...
 	}
 	
@@ -33,7 +33,7 @@
 
 		try {
 			// returns a unique id
-			return Gritter.add(params);
+			return Gritter.add(params || {});
 		} catch(e) {
 			var err = 'Gritter Error: ' + e;
 			(console && console.error) ? console.error(err, params) : alert(err);
@@ -46,7 +46,7 @@
 	* @see Gritter#removeSpecific();
 	*/
 	$.gritter.remove = function(id, params){
-		Gritter.removeSpecific(id, params || '');
+		Gritter.removeSpecific(id, params || {});
 	}
 	
 	/**
@@ -54,7 +54,7 @@
 	* @see Gritter#stop();
 	*/
 	$.gritter.removeAll = function(params){
-		Gritter.stop(params || '');
+		Gritter.stop(params || {});
 	}
 	
 	/**
@@ -88,12 +88,12 @@
 				throw 'You need to fill out the first 2 params: "title" and "text"'; 
 			}
 			
-			// check the options and set them once
+			// Check the options and set them once
 			if(!this._is_setup){
 				this._runSetup();
 			}
 	        
-			// basics
+			// Basics
 			var user = params.title, 
 				text = params.text,
 				image = params.image || '',
@@ -107,16 +107,16 @@
 			var number = this._item_count, 
 				tmp = this._tpl_item;
 			
-			// callbacks - each callback has a unique identifier so they don't get over-ridden
+			// Callbacks - each callback has a unique identifier so they don't get over-written
 			this['_before_open_' + number] = ($.isFunction(params.before_open)) ? params.before_open : function(){};
 			this['_after_open_' + number] = ($.isFunction(params.after_open)) ? params.after_open : function(){};
 			this['_before_close_' + number] = ($.isFunction(params.before_close)) ? params.before_close : function(){};
 			this['_after_close_' + number] = ($.isFunction(params.after_close)) ? params.after_close : function(){};
 		
-			// reset
+			// Reset
 			this._custom_timer = 0;
 			
-			// a custom fade time set
+			// A custom fade time set
 			if(time_alive){
 				this._custom_timer = time_alive;
 			}
@@ -124,6 +124,7 @@
 			var image_str = (image != '') ? '<img src="' + image + '" class="gritter-image" />' : '',
 				class_name = (image != '') ? 'gritter-with-image' : 'gritter-without-image';
 			
+			// String replacements on the template
 			tmp = this._str_replace(
 				['[[username]]', '[[text]]', '[[image]]', '[[number]]', '[[class_name]]', '[[item_class]]'],
 				[user, text, image_str, this._item_count, class_name, item_class], tmp
@@ -142,11 +143,11 @@
 				this._setFadeTimer(item, number);
 			}
 			
-			// bind the hovering states
+			// Bind the hover/unhover states
 			$(item).bind('mouseenter mouseleave', function(event){
 				if(event.type == 'mouseenter'){
 					if(!sticky){ 
-						Gritter._restoreItemIfFading(this, number);
+						Gritter._restoreItemIfFading($(this), number);
 					}
 				}
 				else {
@@ -165,12 +166,15 @@
 		* If we don't have any more gritter notifications, get rid of the wrapper using this check
 		* @private
 		* @param {Integer} unique_id The ID of the element that was just deleted, use it for a callback
+		* @param {Object} e The jQuery element that we're going to perform the remove() action on
 		*/
-		_countRemoveWrapper: function(unique_id){
+		_countRemoveWrapper: function(unique_id, e){
 		    
-			// callback
-			this['_after_close_' + unique_id]($('#gritter-item-' + unique_id));
-			// check if it's empty, if it is.. remove the wrapper
+		    // Remove it then run the callback function
+		    e.remove();
+			this['_after_close_' + unique_id](e);
+			
+			// Check if the wrapper is empty, if it is.. remove the wrapper
 			if($('.gritter-item-wrapper').length == 0){
 				$('#gritter-notice-wrapper').remove();
 			}
@@ -182,19 +186,40 @@
 		* @private
 		* @param {Object} e The jQuery element to get rid of
 		* @param {Integer} unique_id The id of the element to remove
+		* @param {Object} params An optional list of params to set fade speeds etc.
+		* @param {Boolean} unbind_events Unbind the mouseenter/mouseleave events if they click (X)
 		*/
-		_fade: function(e, unique_id){
+		_fade: function(e, unique_id, params, unbind_events){
 			
-			Gritter['_before_close_' + unique_id](e);
-			e.animate({
-				opacity:0
-			}, Gritter.fade_out_speed, function(){
-				e.animate({ height: 0 }, 300, function(){
-					e.remove();
-					Gritter._countRemoveWrapper(unique_id);
+			var params = params || {},
+				fade = (typeof(params.fade) != 'undefined') ? params.fade : true;
+				fade_out_speed = params.speed || this.fade_out_speed;
+			
+			this['_before_close_' + unique_id](e);
+			
+			// If this is true, then we are coming from clicking the (X)
+			if(unbind_events){
+				e.unbind('mouseenter mouseleave');
+			}
+			
+			// Fade it out or remove it
+			if(fade){
+			
+				e.animate({
+					opacity: 0
+				}, fade_out_speed, function(){
+					e.animate({ height: 0 }, 300, function(){
+						Gritter._countRemoveWrapper(unique_id, e);
+					})
 				})
-			})
-		    
+				
+			}
+			else {
+				
+				this._countRemoveWrapper(unique_id, e);
+				
+			}
+					    
 		},
 		
 		/**
@@ -211,15 +236,17 @@
 				e.addClass('hover');
 		    	var find_img = e.find('img');
 		    	
-				if(find_img.length){
-					find_img.before(this._tpl_close);
-				}
-				else {
+		    	// Insert the close button before what element
+				(find_img.length) ? 
+					find_img.before(this._tpl_close) : 
 					e.find('span').before(this._tpl_close);
-				}
 				
+				// Clicking (X) makes the perdy thing close
 				e.find('.gritter-close').click(function(){
-					Gritter._remove(this);
+				
+					var unique_id = e.attr('id').split('-')[2];
+					Gritter.removeSpecific(unique_id, {}, e, true);
+					
 				});
 			
 			}
@@ -234,52 +261,21 @@
 		},
 		
 		/**
-		* Remove a notification, this is called from "close" button
-		* @private
-		* @param {Object} e The jQuery element
-		*/
-		_remove: function(e){
-			
-			var gritter_wrap = $(e).parents('.gritter-item-wrapper');
-			var unique_id = gritter_wrap.attr('id').split('-')[2];
-			this.removeSpecific(unique_id);
-			
-			/*
-			var gritter_wrap = $(e).parents('.gritter-item-wrapper');
-			var unique_id = gritter_wrap.attr('id').split('-')[2];
-			this['_before_close_' + unique_id](gritter_wrap);
-		    
-			gritter_wrap.fadeOut('medium', function(){ 
-				$(this).remove();  
-				Gritter._countRemoveWrapper(unique_id);
-			});
-		    */
-		    
-		},
-		
-		/**
 		* Remove a specific notification based on an ID
 		* @param {Integer} unique_id The ID used to delete a specific notification
 		* @param {Object} params A set of options passed in to determine how to get rid of it
+		* @param {Object} e The jQuery element that we're "fading" then removing
+		* @param {Boolean} unbind_events If we clicked on the (X) we set this to true to unbind mouseenter/mouseleave
 		*/
-		removeSpecific: function(unique_id, params){
+		removeSpecific: function(unique_id, params, e, unbind_events){
 			
-			var e = $('#gritter-item-' + unique_id);
-			this['_before_close_' + unique_id](e);
-			
-			if(typeof(params) === 'object'){
-				if(params.fade){
-					var speed = (params.speed) ? params.speed : this.fade_out_speed;
-					e.fadeOut(speed, function(){
-						e.remove();
-					});
-				}
-			}
-			else {
-				e.remove();
+			if(!e){
+				var e = $('#gritter-item-' + unique_id);
 			}
 			
-			this._countRemoveWrapper(unique_id);
+			// We set the fourth param to let the _fade function know to 
+			// unbind the "mouseleave" event.  Once you click (X) there's no going back!
+			this._fade(e, unique_id, params || {}, unbind_events);
 			
 		},
 		
@@ -291,8 +287,8 @@
 		*/
 		_restoreItemIfFading: function(e, unique_id){
 			
-			clearTimeout(Gritter['_int_id_' + unique_id]);
-			$(e).stop().css({ opacity: 1 });
+			clearTimeout(this['_int_id_' + unique_id]);
+			e.stop().css({ opacity: '' });
 		    
 		},
 		
@@ -315,10 +311,12 @@
 		* @param {Object} item The HTML element we're dealing with
 		* @param {Integer} unique_id The ID of the element
 		*/
-		_setFadeTimer: function(item, unique_id){
+		_setFadeTimer: function(e, unique_id){
 			
 			var timer_str = (this._custom_timer) ? this._custom_timer : this.time;
-			Gritter['_int_id_' + unique_id] = setTimeout(function(){ Gritter._fade(item, unique_id); }, timer_str);
+			this['_int_id_' + unique_id] = setTimeout(function(){ 
+				Gritter._fade(e, unique_id); 
+			}, timer_str);
 		
 		},
 		

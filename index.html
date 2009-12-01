@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="css/jquery.gritter.css" />
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">google.load('jquery', '1.3.2');</script>
-<script type="text/javascript" src="js/jquery.gritter.js"></script>
+<script type="text/javascript" src="js/jquery.gritter.min.js"></script>
 <script type="text/javascript">
 	
 	$(document).ready(function(){
@@ -14,22 +14,14 @@
 		// global setting override
 		/*
 		$.extend($.gritter.options, { 
-			fade_in_speed: 'medium', // how fast notifications fade in (string or int)
-			fade_out_speed: 2000, // how fast the notices fade out
-			time: 6000 // hang on the screen for...
+			fade_in_speed: 100, // how fast notifications fade in (string or int)
+			fade_out_speed: 100, // how fast the notices fade out
+			time: 3000 // hang on the screen for...
 		});
 		*/
 		
 		$('#add-sticky').click(function(){
-		
-			// You can have it return a unique id, this can be used to manually remove it later using
-			/*
-			$.gritter.remove(unique_id, { 
-					fade: true,
-					speed: 'fast'
-				}
-			);
-			*/
+			
 			var unique_id = $.gritter.add({
 				// (string | mandatory) the heading of the notification
 				title: 'This is a sticky notice!',
@@ -44,6 +36,18 @@
 				// (string | optional) the class name you want to apply to that specific message
 				class_name: 'my-sticky-class' 
 			});
+			
+			// You can have it return a unique id, this can be used to manually remove it later using
+			/*
+			setTimeout(function(){
+				
+				$.gritter.remove(unique_id, { 
+					fade: true,
+					speed: 'slow'
+				});
+				
+			}, 6000)
+			*/
 			
 			return false;
 		

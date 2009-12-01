@@ -30,6 +30,7 @@
 .gritter-item-wrapper {
 	position:relative;
 	margin:0 0 10px 0;
+	background:url('.'); /* ie7/8 fix */ 
 }
 .gritter-top {
 	background:url(../images/gritter.png) no-repeat left -30px;
