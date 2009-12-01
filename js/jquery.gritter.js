@@ -127,7 +127,7 @@
 			tmp = this._str_replace(
 				['[[username]]', '[[text]]', '[[image]]', '[[number]]', '[[class_name]]', '[[item_class]]'],
 				[user, text, image_str, this._item_count, class_name, item_class], tmp
-	        );
+			);
 	        
 			this['_before_open_' + number]();
 			$('#gritter-notice-wrapper').append(tmp);
@@ -167,12 +167,12 @@
 		*/
 		_countRemoveWrapper: function(unique_id){
 		    
-		    // callback
-		    this['_after_close_' + unique_id]($('#gritter-item-' + unique_id));
-		    // check if it's empty, if it is.. remove the wrapper
-		    if($('.gritter-item-wrapper').length == 0){
-		        $('#gritter-notice-wrapper').remove();
-		    }
+			// callback
+			this['_after_close_' + unique_id]($('#gritter-item-' + unique_id));
+			// check if it's empty, if it is.. remove the wrapper
+			if($('.gritter-item-wrapper').length == 0){
+				$('#gritter-notice-wrapper').remove();
+			}
 		
 		},
 		
@@ -184,14 +184,14 @@
 		_fade: function(e, unique_id){
 			
 			Gritter['_before_close_' + unique_id](e);
-		    e.animate({
-		        opacity:0
-		    }, Gritter.fade_out_speed, function(){
-		        e.animate({ height: 0 }, 300, function(){
-		            e.remove();
-		            Gritter._countRemoveWrapper(unique_id);
-		        })
-		    })
+			e.animate({
+				opacity:0
+			}, Gritter.fade_out_speed, function(){
+				e.animate({ height: 0 }, 300, function(){
+					e.remove();
+					Gritter._countRemoveWrapper(unique_id);
+				})
+			})
 		    
 		},
 		
@@ -205,7 +205,7 @@
 			// Change the border styles and add the (X) close button when you hover
 			if(type == 'mouseenter'){
 		    	
-		    	e.addClass('hover');
+				e.addClass('hover');
 		    	
 				if(e.find('img').length){
 					e.find('img').before(this._tpl_close);
@@ -222,8 +222,8 @@
 			// Remove the border styles and (X) close button when you mouse out
 			else {
 				
-		   		e.removeClass('hover');
-		    	e.find('.gritter-close').remove();
+				e.removeClass('hover');
+				e.find('.gritter-close').remove();
 				
 			}
 		    
@@ -234,17 +234,16 @@
 		* @param {Object} e The jQuery element
 		*/
 		_remove: function(e){
+			
+			var gritter_wrap = $(e).parents('.gritter-item-wrapper');
+			var unique_id = gritter_wrap.attr('id').split('-')[2];
+			this['_before_close_' + unique_id](gritter_wrap);
 		    
-		    var gritter_wrap = $(e).parents('.gritter-item-wrapper');
-		    var unique_id = gritter_wrap.attr('id').split('-')[2];
-		    this['_before_close_' + unique_id](gritter_wrap);
-		    
-		    gritter_wrap.fadeOut('medium', function(){ 
-		    	$(this).remove();  
-		    	Gritter._countRemoveWrapper(unique_id);
-		    });
-		    
-		    
+			gritter_wrap.fadeOut('medium', function(){ 
+				$(this).remove();  
+				Gritter._countRemoveWrapper(unique_id);
+			});
+		     
 		},
 		
 		/**
@@ -284,7 +283,7 @@
 		_restoreItemIfFading: function(e, unique_id){
 			
 			clearTimeout(Gritter['_int_id_' + unique_id]);
-		    $(e).stop().css({ opacity: 1 });
+			$(e).stop().css({ opacity: 1 });
 		    
 		},
 		
@@ -294,9 +293,9 @@
 		_runSetup: function(){
 		
 			for(opt in $.gritter.options){
-		    	this[opt] = $.gritter.options[opt];
-		    }
-		    this._is_setup = 1;
+				this[opt] = $.gritter.options[opt];
+			}
+			this._is_setup = 1;
 		    
 		},
 		
@@ -308,7 +307,7 @@
 		_setFadeTimer: function(item, unique_id){
 			
 			var timer_str = (this._custom_timer) ? this._custom_timer : this.time;
-		    Gritter['_int_id_' + number] = setTimeout(function(){ Gritter._fade(item, unique_id); }, timer_str);
+			Gritter['_int_id_' + unique_id] = setTimeout(function(){ Gritter._fade(item, unique_id); }, timer_str);
 		
 		},
 		
@@ -337,31 +336,39 @@
 		* @param {String/Array} replace A list of things to replace the searches with
 		* @return {String} sa The output
 		*/  
-		_str_replace: function(search, replace, subject, count) {
+		_str_replace: function(search, replace, subject, count){
 		
-		    var i = 0, j = 0, temp = '', repl = '', sl = 0, fl = 0,
-		        f = [].concat(search),
-		        r = [].concat(replace),
-		        s = subject,
-		        ra = r instanceof Array, sa = s instanceof Array;
-		    s = [].concat(s);
-		    if (count) {
-		        this.window[count] = 0;
-		        }
+			var i = 0, j = 0, temp = '', repl = '', sl = 0, fl = 0,
+				f = [].concat(search),
+				r = [].concat(replace),
+				s = subject,
+				ra = r instanceof Array, sa = s instanceof Array;
+			s = [].concat(s);
+			
+			if(count){
+				this.window[count] = 0;
+			}
 		
-		    for (i=0, sl=s.length; i < sl; i++) {
-		        if (s[i] === '') {
-		            continue;
-		        }
-		        for (j=0, fl=f.length; j < fl; j++) {
-		            temp = s[i]+'';
-		            repl = ra ? (r[j] !== undefined ? r[j] : '') : r[0];
-		            s[i] = (temp).split(f[j]).join(repl);
-		            if (count && s[i] !== temp) {
-		                this.window[count] += (temp.length-s[i].length)/f[j].length;}
-		        }
-		    }
-		    return sa ? s : s[0];
+			for(i = 0, sl = s.length; i < sl; i++){
+				
+				if(s[i] === ''){
+					continue;
+				}
+				
+		        for (j = 0, fl = f.length; j < fl; j++){
+					
+					temp = s[i] + '';
+					repl = ra ? (r[j] !== undefined ? r[j] : '') : r[0];
+					s[i] = (temp).split(f[j]).join(repl);
+					
+					if(count && s[i] !== temp){
+						this.window[count] += (temp.length-s[i].length) / f[j].length;
+					}
+					
+				}
+			}
+			
+			return sa ? s : s[0];
 		    
 		},
 		
