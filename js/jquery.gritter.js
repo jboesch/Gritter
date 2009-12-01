@@ -58,17 +58,17 @@
 	}
 	
 	/**
-	* The initialization of our Gritter object literal goodness
-	* @constructor
+	* Big fat Gritter object
+	* @constructor (not really since it's object literal)
 	*/
 	var Gritter = {
 	    
-	    // Public - options to over-ride with $.gritter.options in "add"
+		// Public - options to over-ride with $.gritter.options in "add"
 		fade_in_speed: '',
 		fade_out_speed: '',
 		time: '',
 	    
-	    // Private - no touchy the private parts
+		// Private - no touchy the private parts
 		_custom_timer: 0,
 		_item_count: 0,
 		_is_setup: 0,
@@ -163,6 +163,7 @@
 		
 		/**
 		* If we don't have any more gritter notifications, get rid of the wrapper using this check
+		* @private
 		* @param {Integer} unique_id The ID of the element that was just deleted, use it for a callback
 		*/
 		_countRemoveWrapper: function(unique_id){
@@ -178,6 +179,7 @@
 		
 		/**
 		* Fade out an element after it's been on the screen for x amount of time
+		* @private
 		* @param {Object} e The jQuery element to get rid of
 		* @param {Integer} unique_id The id of the element to remove
 		*/
@@ -197,6 +199,7 @@
 		
 		/**
 		* Perform actions based on the type of bind (mouseenter, mouseleave) 
+		* @private
 		* @param {Object} e The jQuery element
 		* @param {String} type The type of action we're performing: mouseenter or mouseleave
 		*/
@@ -206,9 +209,10 @@
 			if(type == 'mouseenter'){
 		    	
 				e.addClass('hover');
+		    	var find_img = e.find('img');
 		    	
-				if(e.find('img').length){
-					e.find('img').before(this._tpl_close);
+				if(find_img.length){
+					find_img.before(this._tpl_close);
 				}
 				else {
 					e.find('span').before(this._tpl_close);
@@ -231,10 +235,16 @@
 		
 		/**
 		* Remove a notification, this is called from "close" button
+		* @private
 		* @param {Object} e The jQuery element
 		*/
 		_remove: function(e){
 			
+			var gritter_wrap = $(e).parents('.gritter-item-wrapper');
+			var unique_id = gritter_wrap.attr('id').split('-')[2];
+			this.removeSpecific(unique_id);
+			
+			/*
 			var gritter_wrap = $(e).parents('.gritter-item-wrapper');
 			var unique_id = gritter_wrap.attr('id').split('-')[2];
 			this['_before_close_' + unique_id](gritter_wrap);
@@ -243,7 +253,8 @@
 				$(this).remove();  
 				Gritter._countRemoveWrapper(unique_id);
 			});
-		     
+		    */
+		    
 		},
 		
 		/**
@@ -258,10 +269,7 @@
 			
 			if(typeof(params) === 'object'){
 				if(params.fade){
-					var speed = this.fade_out_speed;
-					if(params.speed){
-						speed = params.speed;
-					}
+					var speed = (params.speed) ? params.speed : this.fade_out_speed;
 					e.fadeOut(speed, function(){
 						e.remove();
 					});
@@ -277,6 +285,7 @@
 		
 		/**
 		* If the item is fading out and we hover over it, restore it!
+		* @private
 		* @param {Object} e The HTML element to remove
 		* @param {Integer} unique_id The ID of the element
 		*/
@@ -289,6 +298,7 @@
 		
 		/**
 		* Setup the global options - only once
+		* @private
 		*/
 		_runSetup: function(){
 		
@@ -301,6 +311,7 @@
 		
 		/**
 		* Set the notification to fade out after a certain amount of time
+		* @private
 		* @param {Object} item The HTML element we're dealing with
 		* @param {Integer} unique_id The ID of the element
 		*/
@@ -332,6 +343,7 @@
 		
 		/**
 		* An extremely handy PHP function ported to JS, works well for templating
+		* @private
 		* @param {String/Array} search A list of things to search for
 		* @param {String/Array} replace A list of things to replace the searches with
 		* @return {String} sa The output
@@ -374,6 +386,7 @@
 		
 		/**
 		* A check to make sure we have something to wrap our notices with
+		* @private
 		*/  
 		_verifyWrapper: function(){
 		  

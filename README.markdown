@@ -4,6 +4,13 @@ A small growl-like notification plugin for jQuery
 
 ## Change Log
 
+### Changes in 1.6 (December1, 2009)
+
+* Commented code using JSDOC
+* Code cleanup and optimization
+* Added optional "class_name" option for $.gritter.add() to apply a class to a specific notification
+* Fixed IE7 issue pointed out by stoffel (http://boedesign.com/blog/2009/07/11/growl-for-jquery-gritter/) 
+
 ### Changes in 1.5 (October 21, 2009)
 
 * Renamed the global option parameters to make more sense
