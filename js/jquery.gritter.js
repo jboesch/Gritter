@@ -107,12 +107,11 @@
 			var number = this._item_count, 
 				tmp = this._tpl_item;
 			
-			// Callbacks - each callback has a unique identifier so they don't get over-written
-			this['_before_open_' + number] = ($.isFunction(params.before_open)) ? params.before_open : function(){};
-			this['_after_open_' + number] = ($.isFunction(params.after_open)) ? params.after_open : function(){};
-			this['_before_close_' + number] = ($.isFunction(params.before_close)) ? params.before_close : function(){};
-			this['_after_close_' + number] = ($.isFunction(params.after_close)) ? params.after_close : function(){};
-		
+			// Assign callbacks
+			$(['before_open', 'after_open', 'before_close', 'after_close']).each(function(i, val){
+				Gritter['_' + val + '_' + number] = ($.isFunction(params[val])) ? params[val] : function(){}
+			});
+
 			// Reset
 			this._custom_timer = 0;
 			
@@ -170,8 +169,8 @@
 		*/
 		_countRemoveWrapper: function(unique_id, e){
 		    
-		    // Remove it then run the callback function
-		    e.remove();
+			// Remove it then run the callback function
+			e.remove();
 			this['_after_close_' + unique_id](e);
 			
 			// Check if the wrapper is empty, if it is.. remove the wrapper
@@ -234,9 +233,9 @@
 			if(type == 'mouseenter'){
 		    	
 				e.addClass('hover');
-		    	var find_img = e.find('img');
+				var find_img = e.find('img');
 		    	
-		    	// Insert the close button before what element
+				// Insert the close button before what element
 				(find_img.length) ? 
 					find_img.before(this._tpl_close) : 
 					e.find('span').before(this._tpl_close);
