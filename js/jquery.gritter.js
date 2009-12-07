@@ -32,11 +32,14 @@
 	$.gritter.add = function(params){
 
 		try {
-			// returns a unique id
 			return Gritter.add(params || {});
 		} catch(e) {
+		
 			var err = 'Gritter Error: ' + e;
-			(console && console.error) ? console.error(err, params) : alert(err);
+			(typeof(console) != 'undefined' && console.error) ? 
+				console.error(err, params) : 
+				alert(err);
+				
 		}
 		
 	}
