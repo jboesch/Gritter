@@ -1,7 +1,7 @@
 # Gritter for jQuery
 
 A small growl-like notification plugin for jQuery
-http://boedesign.com/blog/2009/07/11/growl-for-jquery-gritter/
+- http://boedesign.com/blog/2009/07/11/growl-for-jquery-gritter/
 
 ## Change Log
 
