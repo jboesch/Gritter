@@ -5,7 +5,7 @@
  * Copyright (c) 2009 Jordan Boesch
  * Dual licensed under the MIT and GPL licenses.
  *
- * Date: December 1, 2009
+ * Date: March, 2011
  * Version: 1.6
  */
 
@@ -169,12 +169,13 @@
 		* @private
 		* @param {Integer} unique_id The ID of the element that was just deleted, use it for a callback
 		* @param {Object} e The jQuery element that we're going to perform the remove() action on
-		*/
-		_countRemoveWrapper: function(unique_id, e){
+		* @param {Boolean} manual_close Did we close the gritter dialog with the (X) button
+        */
+		_countRemoveWrapper: function(unique_id, e, manual_close){
 		    
 			// Remove it then run the callback function
 			e.remove();
-			this['_after_close_' + unique_id](e);
+			this['_after_close_' + unique_id](e, manual_close);
 			
 			// Check if the wrapper is empty, if it is.. remove the wrapper
 			if($('.gritter-item-wrapper').length == 0){
@@ -192,12 +193,13 @@
 		* @param {Boolean} unbind_events Unbind the mouseenter/mouseleave events if they click (X)
 		*/
 		_fade: function(e, unique_id, params, unbind_events){
-			
+
 			var params = params || {},
 				fade = (typeof(params.fade) != 'undefined') ? params.fade : true;
-				fade_out_speed = params.speed || this.fade_out_speed;
+				fade_out_speed = params.speed || this.fade_out_speed,
+                manual_close = unbind_events;
 			
-			this['_before_close_' + unique_id](e);
+			this['_before_close_' + unique_id](e, manual_close);
 			
 			// If this is true, then we are coming from clicking the (X)
 			if(unbind_events){
@@ -211,7 +213,7 @@
 					opacity: 0
 				}, fade_out_speed, function(){
 					e.animate({ height: 0 }, 300, function(){
-						Gritter._countRemoveWrapper(unique_id, e);
+						Gritter._countRemoveWrapper(unique_id, e, manual_close);
 					})
 				})
 				
@@ -274,7 +276,7 @@
 			if(!e){
 				var e = $('#gritter-item-' + unique_id);
 			}
-			
+
 			// We set the fourth param to let the _fade function know to 
 			// unbind the "mouseleave" event.  Once you click (X) there's no going back!
 			this._fade(e, unique_id, params || {}, unbind_events);

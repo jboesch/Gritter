@@ -5,6 +5,11 @@ A small growl-like notification plugin for jQuery
 
 ## Change Log
 
+### Changes in 1.7 (March, 2011)
+
+* Fixed 404 issue in the css when fetching '.' as an image
+* Added callback parameter in before_close and after_close callbacks to determine whether it was closed manually by clicking the (X)
+
 ### Changes in 1.6 (December1, 2009)
 
 * Commented code using JSDOC
