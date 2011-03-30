@@ -1,24 +1,3 @@
-/* ie6 trash */
-* html #gritter-notice-wrapper {
-	position:absolute; 
-}
-* html .gritter-top {
-	margin-bottom:-10px;
-}
-* html .gritter-item {
-	padding-bottom:0;
-}
-* html .gritter-bottom {
-	margin-bottom:0;
-}
-* html .gritter-close {
-	background:url(../images/gritter-close-ie6.gif);
-	width:22px;
-	height:22px;
-	top:7px;
-	left:7px;
-}
-
 /* the norm */
 #gritter-notice-wrapper {
 	position:fixed;
@@ -26,6 +5,22 @@
 	right:20px;
 	width:301px;
 	z-index:9999;
+}
+#gritter-notice-wrapper.top-left {
+    left: 20px;
+    right: auto;
+}
+#gritter-notice-wrapper.bottom-right {
+    top: auto;
+    left: auto;
+    bottom: 20px;
+    right: 20px;
+}
+#gritter-notice-wrapper.bottom-left {
+    top: auto;
+    right: auto;
+    bottom: 20px;
+    left: 20px;
 }
 .gritter-item-wrapper {
 	position:relative;

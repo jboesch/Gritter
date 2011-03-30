@@ -2,11 +2,11 @@
  * Gritter for jQuery
  * http://www.boedesign.com/
  *
- * Copyright (c) 2009 Jordan Boesch
+ * Copyright (c) 2011 Jordan Boesch
  * Dual licensed under the MIT and GPL licenses.
  *
- * Date: March, 2011
- * Version: 1.6
+ * Date: March 29, 2011
+ * Version: 1.7.1
  */
 
 (function($){
@@ -20,6 +20,7 @@
 	* Set up global options that the user can over-ride
 	*/
 	$.gritter.options = {
+        position: '',
 		fade_in_speed: 'medium', // how fast notifications fade in
 		fade_out_speed: 1000, // how fast the notices fade out
 		time: 6000 // hang on the screen for...
@@ -67,6 +68,7 @@
 	var Gritter = {
 	    
 		// Public - options to over-ride with $.gritter.options in "add"
+        position: '',
 		fade_in_speed: '',
 		fade_out_speed: '',
 		time: '',
@@ -102,6 +104,7 @@
 				image = params.image || '',
 				sticky = params.sticky || false,
 				item_class = params.class_name || '',
+                position = $.gritter.options.position,
 				time_alive = params.time || '';
 			
 			this._verifyWrapper();
@@ -133,7 +136,7 @@
 			);
 	        
 			this['_before_open_' + number]();
-			$('#gritter-notice-wrapper').append(tmp);
+			$('#gritter-notice-wrapper').addClass(position).append(tmp);
 			
 			var item = $('#gritter-item-' + this._item_count);
 			
