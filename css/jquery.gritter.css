@@ -58,6 +58,7 @@
 	margin:0;
 }
 .gritter-close {
+	display:none;
 	position:absolute;
 	top:5px;
 	left:3px;

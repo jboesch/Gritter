@@ -78,7 +78,7 @@
 		_item_count: 0,
 		_is_setup: 0,
 		_tpl_close: '<div class="gritter-close"></div>',
-		_tpl_item: '<div id="gritter-item-[[number]]" class="gritter-item-wrapper [[item_class]]" style="display:none"><div class="gritter-top"></div><div class="gritter-item">[[image]]<div class="[[class_name]]"><span class="gritter-title">[[username]]</span><p>[[text]]</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div>',
+		_tpl_item: '<div id="gritter-item-[[number]]" class="gritter-item-wrapper [[item_class]]" style="display:none"><div class="gritter-top"></div><div class="gritter-item">[[close]][[image]]<div class="[[class_name]]"><span class="gritter-title">[[username]]</span><p>[[text]]</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div>',
 		_tpl_wrap: '<div id="gritter-notice-wrapper"></div>',
 	    
 		/**
@@ -131,8 +131,8 @@
 			
 			// String replacements on the template
 			tmp = this._str_replace(
-				['[[username]]', '[[text]]', '[[image]]', '[[number]]', '[[class_name]]', '[[item_class]]'],
-				[user, text, image_str, this._item_count, class_name, item_class], tmp
+				['[[username]]', '[[text]]', '[[close]]', '[[image]]', '[[number]]', '[[class_name]]', '[[item_class]]'],
+				[user, text, this._tpl_close, image_str, this._item_count, class_name, item_class], tmp
 			);
 	        
 			this['_before_open_' + number]();
@@ -241,12 +241,9 @@
 			if(type == 'mouseenter'){
 		    	
 				e.addClass('hover');
-				var find_img = e.find('img');
-		    	
-				// Insert the close button before what element
-				(find_img.length) ? 
-					find_img.before(this._tpl_close) : 
-					e.find('span').before(this._tpl_close);
+				
+				// Show close button
+				e.find('.gritter-close').show();
 				
 				// Clicking (X) makes the perdy thing close
 				e.find('.gritter-close').click(function(){
@@ -257,11 +254,13 @@
 				});
 			
 			}
-			// Remove the border styles and (X) close button when you mouse out
+			// Remove the border styles and hide (X) close button when you mouse out
 			else {
 				
 				e.removeClass('hover');
-				e.find('.gritter-close').remove();
+				
+				// Hide close button
+				e.find('.gritter-close').hide();
 				
 			}
 		    
