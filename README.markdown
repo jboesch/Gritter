@@ -5,6 +5,10 @@ A small growl-like notification plugin for jQuery
 
 ## Change Log
 
+### Changes in 1.7.2 (December 2, 2011)
+
+* Added option to return false on "before_open" callback to determine whether or not to show the gritter message (good for setting a max)
+
 ### Changes in 1.7.1 (March 29, 2011)
 
 * Dropped IE6 support

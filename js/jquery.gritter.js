@@ -5,8 +5,8 @@
  * Copyright (c) 2011 Jordan Boesch
  * Dual licensed under the MIT and GPL licenses.
  *
- * Date: March 29, 2011
- * Version: 1.7.1
+ * Date: December 2, 2011
+ * Version: 1.7.2
  */
 
 (function($){
@@ -106,7 +106,7 @@
 				item_class = params.class_name || '',
                 position = $.gritter.options.position,
 				time_alive = params.time || '';
-			
+
 			this._verifyWrapper();
 			
 			this._item_count++;
@@ -134,8 +134,12 @@
 				['[[username]]', '[[text]]', '[[close]]', '[[image]]', '[[number]]', '[[class_name]]', '[[item_class]]'],
 				[user, text, this._tpl_close, image_str, this._item_count, class_name, item_class], tmp
 			);
-	        
-			this['_before_open_' + number]();
+
+            // If it's false, don't show another gritter message
+			if(this['_before_open_' + number]() === false){
+                return false;
+            }
+
 			$('#gritter-notice-wrapper').addClass(position).append(tmp);
 			
 			var item = $('#gritter-item-' + this._item_count);
@@ -201,7 +205,7 @@
 				fade = (typeof(params.fade) != 'undefined') ? params.fade : true;
 				fade_out_speed = params.speed || this.fade_out_speed,
                 manual_close = unbind_events;
-			
+
 			this['_before_close_' + unique_id](e, manual_close);
 			
 			// If this is true, then we are coming from clicking the (X)
@@ -247,10 +251,8 @@
 				
 				// Clicking (X) makes the perdy thing close
 				e.find('.gritter-close').click(function(){
-				
 					var unique_id = e.attr('id').split('-')[2];
 					Gritter.removeSpecific(unique_id, {}, e, true);
-					
 				});
 			
 			}
@@ -321,7 +323,7 @@
 			
 			var timer_str = (this._custom_timer) ? this._custom_timer : this.time;
 			this['_int_id_' + unique_id] = setTimeout(function(){ 
-				Gritter._fade(e, unique_id); 
+				Gritter._fade(e, unique_id);
 			}, timer_str);
 		
 		},

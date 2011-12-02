@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" type="text/css" href="css/jquery.gritter.css" />
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript">google.load('jquery', '1.5');</script>
+<script type="text/javascript">google.load('jquery', '1.7.1');</script>
 <script type="text/javascript" src="js/jquery.gritter.min.js"></script>
 <style type="text/css">
 	body {
@@ -47,6 +47,9 @@
 		<li>
 			<a href="#" id="add-sticky-with-callbacks">Add a sticky notification (with callbacks)</a>
 		</li>
+        <li>
+            <a href="#" id="add-max">Add notification with max of 3</a>: If there are 3 messages already on screen, it won't show another one.
+        </li>
 		<li>
 			<a href="#" id="remove-all">Remove all notifications</a>
 		</li>
@@ -121,6 +124,31 @@
 			return false;
 
 		});
+
+        $('#add-max').click(function(){
+
+            $.gritter.add({
+                // (string | mandatory) the heading of the notification
+                title: 'This is a notice with a max of 3 on screen at one time!',
+                // (string | mandatory) the text inside the notification
+                text: 'This will fade out after a certain amount of time. Vivamus eget tincidunt velit. Cum sociis natoque penatibus et <a href="#" style="color:#ccc">magnis dis parturient</a> montes, nascetur ridiculus mus.',
+                // (string | optional) the image to display on the left
+                image: 'http://a0.twimg.com/profile_images/59268975/jquery_avatar_bigger.png',
+                // (bool | optional) if you want it to fade out on its own or just sit there
+                sticky: false,
+                // (function) before the gritter notice is opened
+                before_open: function(){
+                    if($('.gritter-item-wrapper').length == 3)
+                    {
+                        // Returning false prevents a new gritter from opening
+                        return false;
+                    }
+                }
+            });
+
+            return false;
+
+        });
 
 		$('#add-without-image').click(function(){
 
