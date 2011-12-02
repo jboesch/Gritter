@@ -296,7 +296,7 @@
 		_restoreItemIfFading: function(e, unique_id){
 			
 			clearTimeout(this['_int_id_' + unique_id]);
-			e.stop().css({ opacity: '' });
+			e.stop().css({ opacity: '', height: '' });
 		    
 		},
 		
