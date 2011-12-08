@@ -72,7 +72,7 @@
 	font-weight:bold;
 	padding:0 0 7px 0;
 	display:block;
-	text-shadow:1px 1px #000; /* Not supported by IE :( */
+	text-shadow:1px 1px 0 #000; /* Not supported by IE :( */
 }
 .gritter-image {
 	width:48px;
@@ -86,4 +86,15 @@
 .gritter-with-image {
 	width:220px;
 	float:right;
+}
+/* for the light (white) version of the gritter notice */
+.gritter-light .gritter-item,
+.gritter-light .gritter-bottom,
+.gritter-light .gritter-top,
+.gritter-close {
+    background-image: url(../images/gritter-light.png);
+    color: #222;
+}
+.gritter-light .gritter-title {
+    text-shadow: none;
 }
