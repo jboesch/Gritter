@@ -5,8 +5,8 @@
  * Copyright (c) 2011 Jordan Boesch
  * Dual licensed under the MIT and GPL licenses.
  *
- * Date: December 2, 2011
- * Version: 1.7.2
+ * Date: December 8, 2011
+ * Version: 1.7.3
  */
 
 (function($){
@@ -21,6 +21,7 @@
 	*/
 	$.gritter.options = {
         position: '',
+        class_name: '', // could be set to 'gritter-light' to use white notifications
 		fade_in_speed: 'medium', // how fast notifications fade in
 		fade_out_speed: 1000, // how fast the notices fade out
 		time: 6000 // hang on the screen for...
@@ -63,7 +64,7 @@
 	
 	/**
 	* Big fat Gritter object
-	* @constructor (not really since it's object literal)
+	* @constructor (not really since its object literal)
 	*/
 	var Gritter = {
 	    
@@ -103,7 +104,7 @@
 				text = params.text,
 				image = params.image || '',
 				sticky = params.sticky || false,
-				item_class = params.class_name || '',
+				item_class = params.class_name || $.gritter.options.class_name,
                 position = $.gritter.options.position,
 				time_alive = params.time || '';
 

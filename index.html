@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="css/jquery.gritter.css" />
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">google.load('jquery', '1.7.1');</script>
-<script type="text/javascript" src="js/jquery.gritter.min.js"></script>
+<script type="text/javascript" src="js/jquery.gritter.js"></script>
 <style type="text/css">
 	body {
 		background:#222 url(images/trees.jpg);
@@ -36,11 +36,14 @@
 			<a href="#" id="add-regular">Add regular notification</a>: Fades out after a certain amount of time, can be set for each notification.
 		</li>
 		<li>
-			<a href="#" id="add-sticky">Add sticky notification</a>: Doesn't run on a fade timer.  Just sits there until the user manually removes it by clicking on the (X)
+			<a href="#" id="add-sticky">Add sticky notification</a>: Doesn't run on a fade timer.  Just sits there until the user manually removes it by clicking on the (X).
 		</li>
 		<li>
 			<a href="#" id="add-without-image">Add notification without image</a>
 		</li>
+        <li>
+            <a href="#" id="add-gritter-light">Add a white notification</a>: has a 'gritter-light' class_name applied to it.
+        </li>
 		<li>
 			<a href="#" id="add-with-callbacks">Add notification (with callbacks)</a>
 		</li>
@@ -66,6 +69,7 @@
 		// global setting override
         /*
 		$.extend($.gritter.options, {
+		    class_name: 'gritter-light', // for light notifications (can be added directly to $.gritter.add too)
 		    position: 'bottom-left', // possibilities: bottom-left, bottom-right, top-left, top-right
 			fade_in_speed: 100, // how fast notifications fade in (string or int)
 			fade_out_speed: 100, // how fast the notices fade out
@@ -161,6 +165,19 @@
 
 			return false;
 		});
+
+        $('#add-gritter-light').click(function(){
+
+            $.gritter.add({
+                // (string | mandatory) the heading of the notification
+                title: 'This is a light notification',
+                // (string | mandatory) the text inside the notification
+                text: 'Just add a "gritter-light" class_name to your $.gritter.add or globally to $.gritter.options.class_name',
+                class_name: 'gritter-light'
+            });
+
+            return false;
+        });
 
 		$('#add-with-callbacks').click(function(){
 

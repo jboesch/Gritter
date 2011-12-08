@@ -5,6 +5,11 @@ A small growl-like notification plugin for jQuery
 
 ## Change Log
 
+### Changes in 1.7.3 (December 8, 2011)
+
+* Added $.gritter.options.class_name option
+* Added 'gritter-light' class_name option to use light messages instead of dark ones
+
 ### Changes in 1.7.2 (December 2, 2011)
 
 * Added option to return false on "before_open" callback to determine whether or not to show the gritter message (good for setting a max)
