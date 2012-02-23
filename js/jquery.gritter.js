@@ -168,6 +168,11 @@
 				Gritter._hoverState($(this), event.type);
 			});
 			
+			// Clicking (X) makes the perdy thing close
+			$(item).find('.gritter-close').click(function(){
+				Gritter.removeSpecific(number, {}, null, true);
+			});
+			
 			return number;
 	    
 		},
@@ -249,13 +254,7 @@
 				
 				// Show close button
 				e.find('.gritter-close').show();
-				
-				// Clicking (X) makes the perdy thing close
-				e.find('.gritter-close').click(function(){
-					var unique_id = e.attr('id').split('-')[2];
-					Gritter.removeSpecific(unique_id, {}, e, true);
-				});
-			
+						
 			}
 			// Remove the border styles and hide (X) close button when you mouse out
 			else {
