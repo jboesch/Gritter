@@ -2,11 +2,11 @@
  * Gritter for jQuery
  * http://www.boedesign.com/
  *
- * Copyright (c) 2011 Jordan Boesch
+ * Copyright (c) 2012 Jordan Boesch
  * Dual licensed under the MIT and GPL licenses.
  *
- * Date: December 8, 2011
- * Version: 1.7.3
+ * Date: February 24, 2012
+ * Version: 1.7.4
  */
 
 (function($){
