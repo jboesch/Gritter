@@ -91,7 +91,7 @@
 .gritter-light .gritter-item,
 .gritter-light .gritter-bottom,
 .gritter-light .gritter-top,
-.gritter-close {
+.gritter-light .gritter-close {
     background-image: url(../images/gritter-light.png);
     color: #222;
 }
