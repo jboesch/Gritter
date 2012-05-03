@@ -56,6 +56,7 @@
 .gritter-item p {
 	padding:0;
 	margin:0;
+	word-wrap:break-word;
 }
 .gritter-close {
 	display:none;
