@@ -133,7 +133,7 @@
 			
 			// String replacements on the template
 			if(title){
-				title = this_str_replace('[[title]]',title,this._tpl_title);
+				title = this._str_replace('[[title]]',title,this._tpl_title);
 			}else{
 				title = '';
 			}
