@@ -82,7 +82,7 @@
 }
 .gritter-with-image,
 .gritter-without-image {
-	padding:0 0 5px 0;
+	padding:0;
 }
 .gritter-with-image {
 	width:220px;
