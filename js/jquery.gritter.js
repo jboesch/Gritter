@@ -95,7 +95,7 @@
 			}
 
 			// We might have some issues if we don't have a title or text!
-			if(!params.text){
+			if(params.text === null){
 				throw 'You must supply "text" parameter.'; 
 			}
 			
