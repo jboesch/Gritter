@@ -11,7 +11,7 @@
     "dependencies": {
       "jquery": ">1.4.2"
     },
-    "main": "jquery.gritter.js",
+    "main": "js/jquery.gritter.js",
     "shim": {
       "deps": ["jquery"],
       "exports": "Gritter"
@@ -32,7 +32,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "http://www.opensource.org/licenses/mit-license.php",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
     }
   ],
   "repositories": [
