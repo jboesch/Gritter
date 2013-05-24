@@ -3,6 +3,6 @@
   "version": "1.7.4",
   "main": ["./js/jquery.gritter.js", "./css/jquery.gritter.css"],
   "dependencies": {
-    "jquery": "~1.8.2"
+    "jquery": ">=1.8.2"
   }
 }
