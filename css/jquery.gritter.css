@@ -67,6 +67,7 @@
 	cursor:pointer;
 	width:30px;
 	height:30px;
+	text-indent:-9999em;
 }
 .gritter-title {
 	font-size:14px;
