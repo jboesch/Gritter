@@ -3,6 +3,10 @@
 A small growl-like notification plugin for jQuery
 - http://boedesign.com/blog/2009/07/11/growl-for-jquery-gritter/
 
+## Installation
+
+    $ bower install jquery.gritter
+
 ## Change Log
 
 ### Changes in 1.7.4 (February 24, 2012)
